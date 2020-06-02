@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 engine = create_engine(
-    os.getenv('DATABASE_URL'), connect_args={'check_same_thread': False}, echo=True
+    os.getenv('DATABASE_URL'), echo=True
 )
 SessionLocal = sessionmaker(bind=engine)
 
