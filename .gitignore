@@ -2,4 +2,4 @@ envocbotenv/*
 envocbot.db
 .idea/*
 __pycache__/*
-settings.py
+.env
