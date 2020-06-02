@@ -17,7 +17,7 @@ class List(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id', ondelete='cascade'), index=True)
     date = Column(Date)
-    status = Column(String, default='created', length=50)
+    status = Column(String(50), default='created')
     words = relationship('Word')
 
 
@@ -25,5 +25,5 @@ class Word(Base):
     __tablename__ = 'words'
 
     id = Column(Integer, primary_key=True, index=True)
-    word = Column(String, length=256)
+    word = Column(String(256))
     list_id = Column(Integer, ForeignKey('lists.id', ondelete='cascade'), index=True)
