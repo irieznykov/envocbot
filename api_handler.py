@@ -1,8 +1,5 @@
 import os
 import requests
-from dotenv import load_dotenv
-
-load_dotenv()
 
 url = f"https://api.telegram.org/bot{os.getenv('BOT_API_KEY')}/"
 

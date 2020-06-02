@@ -1,7 +1,11 @@
+from dotenv import load_dotenv
+
 import models
 import updates
 from commands import run
 from database import engine
+
+load_dotenv()
 
 models.Base.metadata.create_all(bind=engine)
 
