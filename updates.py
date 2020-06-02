@@ -6,10 +6,13 @@ def get_updates(offset=None):
 
 
 def get_oldest_update(data):
-    if len(data['result']) > 0:
-        return data['result'][0]
+    if data['ok']:
+        if len(data['result']) > 0:
+            return data['result'][0]
+        else:
+            return data['result']
     else:
-        return data['result']
+        return False
 
 
 def get_update_chat_id(update):
