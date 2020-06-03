@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Date
+from sqlalchemy import Column, ForeignKey, Integer, String, Date, Time
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -19,6 +19,7 @@ class List(Base):
     date = Column(Date)
     status = Column(String(40), default='created')
     words = relationship('Word')
+    notify_times = relationship('NotifyTime')
 
 
 class Word(Base):
@@ -26,4 +27,13 @@ class Word(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     word = Column(String(256))
+    list_id = Column(Integer, ForeignKey('lists.id', ondelete='cascade'), index=True)
+
+
+class NotifyTime(Base):
+    __tablename__ = 'notify_times'
+
+    id = Column(Integer, primary_key=True, index=True)
+    time = Column(Time)
+    status = Column(String(40))
     list_id = Column(Integer, ForeignKey('lists.id', ondelete='cascade'), index=True)

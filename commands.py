@@ -1,5 +1,7 @@
+import datetime
 import sys
 from datetime import date
+from random import randint
 
 import models
 import updates
@@ -21,7 +23,7 @@ def run(update):
     if update_text in commands_list:
         getattr(
             sys.modules[__name__],
-            'command_'+update_text.replace('/', '')
+            'command_' + update_text.replace('/', '')
         )(user=user, chat_id=chat_id, update_text=update_text)
     else:
         add_word(user, chat_id, update_text)
@@ -65,6 +67,7 @@ def command_save_list(user, chat_id, update_text):
 
     if voc_list:
         voc_list.status = 'saved'
+        add_notify_times(voc_list)
         send_message(chat_id, answers[update_text]['existed'])
     else:
         send_message(chat_id, answers[update_text]['not_existed'])
@@ -95,3 +98,27 @@ def add_word(user, chat_id, update_text):
         else:
             send_message(chat_id, 'There are no lists found for today\'s date. '
                                   '\nYou can create the new one by typing the /new_list command!')
+
+
+def add_notify_times(voc_list):
+    now = datetime.datetime.now()
+
+    first_time = None
+    second_time = None
+    third_time = None
+    if now.hour < 12:
+        first_time = randint(0, 120)
+    if now.hour < 14:
+        second_time = randint(120, 360) if not first_time else randint(first_time + 120, 360)
+    if now.hour < 16:
+        third_time = randint(240, 540) if not second_time else randint(second_time + 120, 540)
+
+    for m in (first_time, second_time, third_time):
+        if m is not None:
+            d = datetime.datetime.strptime('12:00', '%H:%M')
+            voc_list.notify_times.append(
+                models.NotifyTime(
+                    time=(d + datetime.timedelta(minutes=m)).strftime('%H:%M:%S'),
+                    status='pending'
+                )
+            )
