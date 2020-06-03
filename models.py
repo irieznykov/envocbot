@@ -17,7 +17,7 @@ class List(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id', ondelete='cascade'), index=True)
     date = Column(Date)
-    status = Column(String(50), default='created')
+    status = Column(String(40), default='created')
     words = relationship('Word')
 
 
