@@ -12,6 +12,28 @@ from database import SessionLocal
 session = SessionLocal()
 
 
+def notify():
+    now_time = datetime.datetime.now()
+
+    lists = session.query(models.List, models.NotifyTime) \
+        .add_columns(models.User.t_id) \
+        .join(models.NotifyTime, models.List.id == models.NotifyTime.list_id) \
+        .join(models.User, models.User.id == models.List.user_id) \
+        .filter(models.NotifyTime.status == 'pending') \
+        .filter(models.List.status == 'saved') \
+        .filter(models.List.date == datetime.date.today()) \
+        .filter(models.NotifyTime.time.between(
+            now_time - datetime.timedelta(minutes=2), now_time + datetime.timedelta(minutes=2)))
+    lists = lists.all()
+
+    for l in lists:
+        words = '\n'.join(list(map(lambda w: f'[{w.word}]', l.List.words)))
+        send_message(l.t_id, 'The today\'s list of the words:\n' + words)
+        l.NotifyTime.status = 'completed'
+
+    session.commit()
+
+
 def run(update):
     # chat_id is the same as telegram user id because of private chats
     chat_id = updates.get_update_chat_id(update)

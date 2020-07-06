@@ -1,7 +1,7 @@
 import settings
 import models
 import updates
-from commands import run
+from commands import run, notify
 from database import engine
 
 models.Base.metadata.create_all(bind=engine)
@@ -11,7 +11,7 @@ def main():
     offset = None
 
     while True:
-
+        notify()
         update = updates.get_oldest_update(updates.get_updates(offset))
         if not update:
             continue
